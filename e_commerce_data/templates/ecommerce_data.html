@@ -1,7 +1,51 @@
-<!DOCTYPE html>
-<html>
-    <body>
-        <h1>Data Analysis</h1>
-        {{ table|safe }}
-    </body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}E-Commerce Data{% endblock title %}
+
+{% block page_content %}
+<form id="sort-form" method="get" action="{% url 'e_commerce_data' %}">
+                    <label for="columnSort">Sort by column</label>
+                    <select name="columnSort">
+                        <option value="">-- Sort by --</option>
+                        <option value="Order ID">Order ID</option>
+                        <option value="Order Date">Order Date</option>
+                        <option value="Customer Name">Customer Name</option>
+                        <option value="Region">Region</option>
+                        <option value="City">City</option>
+                        <option value="Category">Category</option>
+                        <option value="Sub-Category">Sub-Category</option>
+                        <option value="Product Name">Product Name</option>
+                        <option value="Quantity">Quantity</option>
+                        <option value="Unit Price">Unit Price</option>
+                        <option value="Discount">Discount</option>
+                        <option value="Sales">Sales</option>
+                        <option value="Profit">Profit</option>
+                        <option value="Payment Mode">Payment Mode</option>             
+                    </select><br><br>
+                    <label for="order">Sort by order of data</label>
+                    <select name="ascending">
+                        <option value="True">Ascending</option>
+                        <option value="False">Descending</option>           
+                    </select><br>
+                    <label for="columnFilter">Filter by column</label>
+                    <select name="columnFilter" multiple>
+                        <option value="">-- Filter by --</option>
+                        <option value="Order ID">Order ID</option>
+                        <option value="Order Date">Order Date</option>
+                        <option value="Customer Name">Customer Name</option>
+                        <option value="Region">Region</option>
+                        <option value="City">City</option>
+                        <option value="Category">Category</option>
+                        <option value="Sub-Category">Sub-Category</option>
+                        <option value="Product Name">Product Name</option>
+                        <option value="Quantity">Quantity</option>
+                        <option value="Unit Price">Unit Price</option>
+                        <option value="Discount">Discount</option>
+                        <option value="Sales">Sales</option>
+                        <option value="Profit">Profit</option>
+                        <option value="Payment Mode">Payment Mode</option>             
+                    </select><br><br>
+                    <input type="submit" value="Submit">
+                </form>
+{{ table|safe }}
+{% endblock page_content %}

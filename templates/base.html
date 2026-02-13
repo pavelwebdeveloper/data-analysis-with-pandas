@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>E-Commerce Data Alalysis</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    </head>
+    <body data-page="{{ request.resolver_match.url_name }}">
+        <header>
+            <h1>Data Analysis</h1>  
+            <select onchange="location = this.value;">
+                <option value="">-- Select view --</option>
+                <option value="{% url 'e_commerce_data' %}">E-Commerce Data</option>
+                <option value="{% url 'e_commerce_data_describe' %}">Numerical Data General Statistics</option>
+                <option value="{% url 'e_commerce_data_info' %}">General Information about the dataframe</option>
+            </select>          
+        </header>
+        
+        <main id="page-content">
+
+        <h3>
+        {% block title %}{% endblock title %}
+        </h3>
+
+        {% block page_content %}{% endblock page_content %}
+        </main>
+    </body>
+</html>
