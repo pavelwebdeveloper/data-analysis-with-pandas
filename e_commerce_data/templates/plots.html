@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Plots{% endblock title %}
+
+{% block page_content %}
+<form id="plot-form" method="get" action="{% url 'plots' %}">
+    <h4>Filter by column</h4>
+                    <input type="checkbox" id="salesByProduct" name="salesByProduct" value="salesByProductName">
+                    <label for="salesByProduct">Sales by Product</label><br>
+                    <input type="submit" value="Submit">
+</form><br>
+{{ plot|safe }}
+{% endblock page_content %}

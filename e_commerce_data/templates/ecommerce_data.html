@@ -27,7 +27,7 @@
                         <option value="True">Ascending</option>
                         <option value="False">Descending</option>           
                     </select><br>
-                    <label for="columnFilter">Filter by column</label>
+                    <!--<label for="columnFilter">Filter by column</label>
                     <select name="columnFilter" multiple>
                         <option value="">-- Filter by --</option>
                         <option value="Order ID">Order ID</option>
@@ -44,8 +44,39 @@
                         <option value="Sales">Sales</option>
                         <option value="Profit">Profit</option>
                         <option value="Payment Mode">Payment Mode</option>             
-                    </select><br><br>
+                    </select><br><br>-->
+                    <h4>Filter by column</h4>
+                    <input type="checkbox" id="Order ID" name="Order ID" value="Order ID">
+                    <label for="Order ID">Order ID</label><br>
+                    <input type="checkbox" id="Order Date" name="Order Date" value="Order Date">
+                    <label for="Order Date">Order Date</label><br>
+                    <input type="checkbox" id="Customer Name" name="Customer Name" value="Customer Name">
+                    <label for="Customer Name">Customer Name</label><br>
+                    <input type="checkbox" id="Region" name="Region" value="Region">
+                    <label for="Region">Region</label><br>
+                    <input type="checkbox" id="City" name="City" value="City">
+                    <label for="City">City</label><br>
+                    <input type="checkbox" id="Category" name="Category" value="Category">
+                    <label for="Category">Category</label><br>
+                    <input type="checkbox" id="Sub-Category" name="Sub-Category" value="Sub-Category">
+                    <label for="Sub-Category">Sub-Category</label><br>
+                    <input type="checkbox" id="Product Name" name="Product Name" value="Product Name">
+                    <label for="Product Name">Product Name</label><br>
+                    <input type="checkbox" id="Quantity" name="Quantity" value="Quantity">
+                    <label for="Quantity">Quantity</label><br>
+                    <input type="checkbox" id="Unit Price" name="Unit Price" value="Unit Price">
+                    <label for="Unit Price">Unit Price</label><br>
+                    <input type="checkbox" id="Discount" name="Discount" value="Discount">
+                    <label for="Discount">Discount</label><br>
+                    <input type="checkbox" id="Sales" name="Sales" value="Sales">
+                    <label for="Sales">Sales</label><br>
+                    <input type="checkbox" id="Profit" name="Profit" value="Profit">
+                    <label for="Profit">Profit</label><br>
+                    <input type="checkbox" id="Payment Mode" name="Payment Mode" value="Payment Mode">
+                    <label for="Payment Mode">Payment Mode</label><br><br>
+                    <input type="checkbox" id="Plot" name="Plot" value="Plot">
+                    <label for="Plot">Plot</label><br><br>
                     <input type="submit" value="Submit">
-                </form>
+                </form><br>
 {{ table|safe }}
 {% endblock page_content %}
