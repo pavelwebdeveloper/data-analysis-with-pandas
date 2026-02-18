@@ -106,9 +106,9 @@ def plots(request):
     if (kindOfPlot == ""):
         return render(request, 'plots.html')
     elif (kindOfPlot == "salesByProduct"):
-        graph = plotBuilder("Product Name")
+        graph = barPlotBuilder("Product Name", "h", "Total Sales by Product")
     elif (kindOfPlot == "salesByCategory"):
-        graph = plotBuilder("Category")
+        graph = barPlotBuilder("Category", "v", "Total Sales by Category")
 
     graph_html = graph.to_html(full_html=False)
 
@@ -116,7 +116,7 @@ def plots(request):
             'plot': graph_html
         })
 
-def plotBuilder(columnName):
+def barPlotBuilder(columnName, plotOrientation, plotName):
     grouped_df = df.groupby(columnName)["Sales"].sum().reset_index()
     grouped_df = grouped_df.sort_values(by="Sales", ascending=False)
 
@@ -124,14 +124,14 @@ def plotBuilder(columnName):
 
     graph = px.bar(
             grouped_df,
-            y = columnName if columnName == "Product Name" else "Sales",
+            y = columnName if plotOrientation == "h" else "Sales",
             #y=columnName,
-            x = "Sales" if columnName == "Product Name" else columnName,
+            x = "Sales" if plotOrientation == "h" else columnName,
             #x="Sales",
             color=columnName,
-            title="Total Sales by Product",
+            title=plotName,
             template="plotly",
-            orientation = "h" if columnName == "Product Name" else "v",
+            orientation = plotOrientation,
             #orientation="h",
             color_discrete_sequence=px.colors.qualitative.Bold
         )

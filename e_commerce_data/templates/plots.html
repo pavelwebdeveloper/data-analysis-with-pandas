@@ -5,12 +5,12 @@
 {% block page_content %}
 <form id="plot-form" method="get" action="{% url 'plots' %}">
     <h4>Select a plot</h4>
-                    <select name="kindOfPlot">
+                    <select name="kindOfPlot" onchange="this.form.submit();">
                         <option value="">-- Select a plot --</option>
                         <option value="salesByProduct">Sales by product</option> 
                         <option value="salesByCategory">Sales by category</option>          
                     </select><br>
-                    <input type="submit" value="Submit">
+                    <!--<input type="submit" value="Submit">-->
 </form><br>
 <div style="all: initial;">
 {{ plot|safe }}
