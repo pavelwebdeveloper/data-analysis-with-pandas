@@ -99,36 +99,38 @@ def e_commerce_data_info(request):
         'data_info': info_output
     })
 
+
 def plots(request):
     salesByProduct = request.GET.get("salesByProduct", "")
 
+    grouped_df = df.groupby("Product Name")["Sales"].sum().reset_index()
+    grouped_df = grouped_df.sort_values(by="Sales", ascending=False)
+
     graph = px.bar(
-        df.groupby("Product Name")["Sales"].sum().reset_index(),
-        x="Product Name",
-        y="Sales",
-        title="Total Sales by Product"
-        #color="Product Name",
-        #color_discrete_sequence=["black"]
+        grouped_df,
+        y="Product Name",
+        x="Sales",
+        color="Product Name",
+        title="Total Sales by Product",
+        template="plotly",
+        orientation="h",
+        color_discrete_sequence=px.colors.qualitative.Bold
     )
 
-    #graph.update_traces(marker_color="black")
+    graph.update_traces(
+        marker=dict(opacity=1, line=dict(width=1, color="black"))
+    )
 
-    graph.update_traces(marker_color="black")
-
-    #graph.update_layout(template="simple_white")
-
-    """
     graph.update_layout(
-        plot_bgcolor="white",
-        paper_bgcolor="white",
-        font=dict(color="black"),
-        xaxis=dict(showgrid=False),
-        yaxis=dict(showgrid=True, gridcolor="gray")
+        margin=dict(l=200, r=40, t=80, b=40),
+        autosize=True,
+        height=20 * len(grouped_df)
     )
-    """
 
     graph_html = graph.to_html(full_html=False)
 
     return render(request, 'plots.html', {
         'plot': graph_html
     })
+    
+
