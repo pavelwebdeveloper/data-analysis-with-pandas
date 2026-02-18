@@ -101,36 +101,52 @@ def e_commerce_data_info(request):
 
 
 def plots(request):
-    salesByProduct = request.GET.get("salesByProduct", "")
+    kindOfPlot = request.GET.get("kindOfPlot", "")
 
-    grouped_df = df.groupby("Product Name")["Sales"].sum().reset_index()
-    grouped_df = grouped_df.sort_values(by="Sales", ascending=False)
-
-    graph = px.bar(
-        grouped_df,
-        y="Product Name",
-        x="Sales",
-        color="Product Name",
-        title="Total Sales by Product",
-        template="plotly",
-        orientation="h",
-        color_discrete_sequence=px.colors.qualitative.Bold
-    )
-
-    graph.update_traces(
-        marker=dict(opacity=1, line=dict(width=1, color="black"))
-    )
-
-    graph.update_layout(
-        margin=dict(l=200, r=40, t=80, b=40),
-        autosize=True,
-        height=20 * len(grouped_df)
-    )
+    if (kindOfPlot == ""):
+        return render(request, 'plots.html')
+    elif (kindOfPlot == "salesByProduct"):
+        graph = plotBuilder("Product Name")
+    elif (kindOfPlot == "salesByCategory"):
+        graph = plotBuilder("Category")
 
     graph_html = graph.to_html(full_html=False)
 
     return render(request, 'plots.html', {
-        'plot': graph_html
-    })
+            'plot': graph_html
+        })
+
+def plotBuilder(columnName):
+    grouped_df = df.groupby(columnName)["Sales"].sum().reset_index()
+    grouped_df = grouped_df.sort_values(by="Sales", ascending=False)
+
+
+
+    graph = px.bar(
+            grouped_df,
+            y = columnName if columnName == "Product Name" else "Sales",
+            #y=columnName,
+            x = "Sales" if columnName == "Product Name" else columnName,
+            #x="Sales",
+            color=columnName,
+            title="Total Sales by Product",
+            template="plotly",
+            orientation = "h" if columnName == "Product Name" else "v",
+            #orientation="h",
+            color_discrete_sequence=px.colors.qualitative.Bold
+        )
+
+    graph.update_traces(
+            marker=dict(opacity=1, line=dict(width=1, color="black"))
+        )
+
+    graph.update_layout(
+            margin=dict(l=200, r=40, t=80, b=40),
+            autosize=True,
+            height=20 * len(grouped_df)
+        )
+
+    return graph
+    
     
 
