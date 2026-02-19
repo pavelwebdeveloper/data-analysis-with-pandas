@@ -1,9 +1,20 @@
 {% extends "base.html" %}
 
-{% block title %}General Information about the dataframe{% endblock title %}
+{% block title %}Aggregating statistics{% endblock title %}
 
 {% block page_content %}
+
 <pre>
 {{ data_info }}
 </pre>
+
+<form id="aggregating-statistics-form" method="get" action="{% url 'aggregating_statistics' %}">
+    <h4>Select a plot</h4>
+                    <select name="aggregatingStatistics" onchange="this.form.submit();">
+                        <option value="">-- Average profit for different categories --</option>
+                        <option value="averageProfitByCategories">Sales by product</option>
+                    </select><br>
+</form><br>
+
+{{ table|safe }}
 {% endblock page_content %}

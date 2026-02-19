@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -11,7 +12,7 @@
             <select onchange="location = this.value;">
                 <option value="">-- Select view --</option>
                 <option value="{% url 'e_commerce_data' %}">E-Commerce Data</option>
-                <option value="{% url 'e_commerce_data_describe' %}">Numerical Data General Statistics</option>
+                <option value="{% url 'e_commerce_data_aggregating_statistics' %}">Aggregating statistics</option>
                 <option value="{% url 'e_commerce_data_info' %}">General Information about the dataframe</option>
                 <option value="{% url 'plots' %}">Plots</option>
             </select>          
@@ -25,5 +26,6 @@
 
         {% block page_content %}{% endblock page_content %}
         </main>
+        <script src="{% static 'e_commerce_data/javascript/filterinputs.js' %}"></script>
     </body>
 </html>

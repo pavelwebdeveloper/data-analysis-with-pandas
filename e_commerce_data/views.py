@@ -80,13 +80,34 @@ def e_commerce_data(request):
         'table': table
     })
 
-def e_commerce_data_describe(request):
+def e_commerce_data_aggregating_statistics(request):
 
-    df_description = df.describe()
+    aggregatingStatistics = request.GET.get("aggregatingStatistics", "")
 
-    return render(request, 'ecommerce_data_description.html', {
-        'df_description': df_description
-    })
+    df_aggregation_statistics = df.describe()
+
+    if (aggregatingStatistics == ""):
+        return render(request, 'ecommerce_data_aggregating_statistics.html', {
+            'df_aggregation_statistics': df_aggregation_statistics
+        })
+    elif (aggregatingStatistics == "averageProfitByCategories"):
+        averageProfitByCategories = df[["Category", "Profit"]].groupby("Category").mean().reset_index()
+        averageProfitByCategories_table = averageProfitByCategories.to_html(classes='table table-striped', index=False)
+
+        return render(request, 'ecommerce_data_aggregating_statistics.html', {
+            'df_aggregation_statistics': df_aggregation_statistics,
+            'aggregating_statistics_table': averageProfitByCategories_table
+        })
+    elif (aggregatingStatistics == "averageSalesByCategories"):
+        averageSalesByCategories = df[["Category", "Sales"]].groupby("Category").mean().reset_index()
+        averageSalesByCategories_table = averageSalesByCategories.to_html(classes='table table-striped', index=False)
+
+        return render(request, 'ecommerce_data_aggregating_statistics.html', {
+            'df_aggregation_statistics': df_aggregation_statistics,
+            'aggregating_statistics_table': averageSalesByCategories_table
+        })
+
+    
 
 def e_commerce_data_info(request):
 
@@ -106,9 +127,19 @@ def plots(request):
     if (kindOfPlot == ""):
         return render(request, 'plots.html')
     elif (kindOfPlot == "salesByProduct"):
-        graph = barPlotBuilder("Product Name", "h", "Total Sales by Product")
+        graph = barPlotBuilder("Product Name", "Sales", "h", "Total Sales by Product")
     elif (kindOfPlot == "salesByCategory"):
-        graph = barPlotBuilder("Category", "v", "Total Sales by Category")
+        graph = barPlotBuilder("Category", "Sales", "v", "Total Sales by Category")
+    elif (kindOfPlot == "salesBySub-Category"):
+        graph = barPlotBuilder("Sub-Category", "Sales", "v", "Total Sales by Sub-Category")
+    elif (kindOfPlot == "salesByCity"):
+        graph = barPlotBuilder("City", "Sales", "v", "Total Sales by City")
+    elif (kindOfPlot == "quantityByProduct"):
+        graph = barPlotBuilder("Product Name", "Quantity", "h", "Total Sold Quantity by Product")
+    elif (kindOfPlot == "quantityByCategory"):
+        graph = barPlotBuilder("Category", "Quantity", "v", "Total Sold Quantity by Category")
+    elif (kindOfPlot == "quantityBySub-Category"):
+        graph = barPlotBuilder("Sub-Category", "Quantity", "v", "Total Sold Quantity by Sub-Category")
 
     graph_html = graph.to_html(full_html=False)
 
@@ -116,23 +147,18 @@ def plots(request):
             'plot': graph_html
         })
 
-def barPlotBuilder(columnName, plotOrientation, plotName):
-    grouped_df = df.groupby(columnName)["Sales"].sum().reset_index()
-    grouped_df = grouped_df.sort_values(by="Sales", ascending=False)
-
-
+def barPlotBuilder(columnName1, columnName2, plotOrientation, plotName):
+    grouped_df = df.groupby(columnName1)[columnName2].sum().reset_index()
+    grouped_df = grouped_df.sort_values(by=columnName2, ascending=False)
 
     graph = px.bar(
             grouped_df,
-            y = columnName if plotOrientation == "h" else "Sales",
-            #y=columnName,
-            x = "Sales" if plotOrientation == "h" else columnName,
-            #x="Sales",
-            color=columnName,
+            y = columnName1 if plotOrientation == "h" else columnName2,
+            x = columnName2 if plotOrientation == "h" else columnName1,
+            color=columnName1,
             title=plotName,
             template="plotly",
             orientation = plotOrientation,
-            #orientation="h",
             color_discrete_sequence=px.colors.qualitative.Bold
         )
 
