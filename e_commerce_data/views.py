@@ -5,19 +5,21 @@ import io
 
 pd.set_option("display.precision", 0)
 
+# reading the file with e-commerce data
 df = pd.read_csv('./e_commerce_data/Ecommerce_Sales_Data_2024_2025.csv')
 
-# Create your views here.
+# views
 def e_commerce_data(request):
 
+    # reading the file with e-commerce data inside this function again
+    # because of problems accessing the data inside if blocks later
     df = pd.read_csv('./e_commerce_data/Ecommerce_Sales_Data_2024_2025.csv')
 
+    # obtaining input data sent through the form with GET method
     columnSort = request.GET.get("columnSort", "")
     ascending = request.GET.get("ascending", "")
     minValueInput = request.GET.get("minValueInput", "")
     filterByColumn = request.GET.get("filterByColumn", "")
-    #columnFilter = request.GET.getlist("columnFilter", "")
-
     orderID = request.GET.get("Order ID", "")
     orderDate = request.GET.get("Order Date", "")
     customerName = request.GET.get("Customer Name", "")
@@ -32,9 +34,13 @@ def e_commerce_data(request):
     sales = request.GET.get("Sales", "")
     profit = request.GET.get("Profit", "")
     paymentMode = request.GET.get("Payment Mode", "")
+
+    # intiating an array to hold column headings
     columnFilter = []
 
+    # checking if any of the column names have been submitted
     if (orderID or orderDate or customerName or region or city or category or subCategory or productName or quantity or unitPrice or discount or sales or profit or paymentMode):
+        # if any of the column names have been submitted then adding them to the columnFilter array
         if orderID:
            columnFilter.append(orderID) 
         if orderDate:
