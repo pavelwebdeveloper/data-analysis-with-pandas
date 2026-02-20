@@ -14,6 +14,8 @@ def e_commerce_data(request):
 
     columnSort = request.GET.get("columnSort", "")
     ascending = request.GET.get("ascending", "")
+    minValueInput = request.GET.get("minValueInput", "")
+    filterByColumn = request.GET.get("filterByColumn", "")
     #columnFilter = request.GET.getlist("columnFilter", "")
 
     orderID = request.GET.get("Order ID", "")
@@ -72,6 +74,9 @@ def e_commerce_data(request):
 
         if(columnFilter):
             df = df[columnFilter]
+
+    if (filterByColumn and minValueInput):
+        df = df[df[filterByColumn] > int(minValueInput)]
 
 
     table = df.to_html(classes='table table-striped', index=False)

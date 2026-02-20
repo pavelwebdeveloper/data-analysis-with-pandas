@@ -75,11 +75,23 @@
                     <input type="checkbox" id="Payment Mode" name="Payment Mode" value="Payment Mode">
                     <label for="Payment Mode">Payment Mode</label><br><br>
                     <!--<input type="checkbox" id="Plot" name="Plot" value="Plot">
-                    <label for="Plot">Plot</label><br><br>-->
-                    <input type="submit" value="Submit">
-                    <div id="js-filterInputs">
-                        <div id="js-orderId"></div>
+                    <label for="Plot">Plot</label><br><br>
+                    -->
+                    <label for="columnSort">Filter by minimum value</label>
+                    <select id="js-filterByColumn" name="filterByColumn">
+                        <option value="">-- Filter by --</option>
+                        <option value="Order ID">Order ID</option>
+                        <option value="Order Date">Order Date</option>
+                        <option value="Quantity">Quantity</option>
+                        <option value="Unit Price">Unit Price</option>
+                        <option value="Discount">Discount</option>
+                        <option value="Sales">Sales</option>
+                        <option value="Profit">Profit</option>             
+                    </select><br><br>
+                    <div id="js-minValueInput">
                     </div>
+                    <input type="submit" value="Submit">
+                    
                 </form><br>
 {{ table|safe }}
 {% endblock page_content %}
