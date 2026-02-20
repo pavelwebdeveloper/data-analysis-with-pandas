@@ -111,6 +111,31 @@ def e_commerce_data_aggregating_statistics(request):
             'df_aggregation_statistics': df_aggregation_statistics,
             'aggregating_statistics_table': averageSalesByCategories_table
         })
+    elif (aggregatingStatistics == "averageProfitBySub-Categories"):
+        averageProfitBySubCategories = df[["Sub-Category", "Profit"]].groupby("Sub-Category").mean().reset_index()
+        averageProfitBySubCategories_table = averageProfitBySubCategories.to_html(classes='table table-striped', index=False)
+
+        return render(request, 'ecommerce_data_aggregating_statistics.html', {
+            'df_aggregation_statistics': df_aggregation_statistics,
+            'aggregating_statistics_table': averageProfitBySubCategories_table
+        })
+    elif (aggregatingStatistics == "averageSalesBySub-Categories"):
+        averageSalesBySubCategories = df[["Sub-Category", "Sales"]].groupby("Sub-Category").mean().reset_index()
+        averageSalesBySubCategories_table = averageSalesBySubCategories.to_html(classes='table table-striped', index=False)
+
+        return render(request, 'ecommerce_data_aggregating_statistics.html', {
+            'df_aggregation_statistics': df_aggregation_statistics,
+            'aggregating_statistics_table': averageSalesBySubCategories_table
+        })
+    elif (aggregatingStatistics == "paymentModeCounts"):
+        paymentModeCounts = df["Payment Mode"].value_counts().reset_index()
+        paymentModeCounts.columns = ["Payment Mode", "Count"]
+        paymentModeCounts_table = paymentModeCounts.to_html(classes='table table-striped', index=False)
+
+        return render(request, 'ecommerce_data_aggregating_statistics.html', {
+            'df_aggregation_statistics': df_aggregation_statistics,
+            'aggregating_statistics_table': paymentModeCounts_table
+        })
 
     
 
@@ -145,6 +170,8 @@ def plots(request):
         graph = barPlotBuilder("Category", "Quantity", "v", "Total Sold Quantity by Category")
     elif (kindOfPlot == "quantityBySub-Category"):
         graph = barPlotBuilder("Sub-Category", "Quantity", "v", "Total Sold Quantity by Sub-Category")
+    elif (kindOfPlot == "salesByRegion"):
+        graph = barPlotBuilder("Region", "Sales", "v", "Total Sales by Region")
 
     graph_html = graph.to_html(full_html=False)
 
@@ -174,7 +201,8 @@ def barPlotBuilder(columnName1, columnName2, plotOrientation, plotName):
     graph.update_layout(
             margin=dict(l=200, r=40, t=80, b=40),
             autosize=True,
-            height=20 * len(grouped_df)
+            #height=20 * len(grouped_df)
+            height = 20 * len(grouped_df) if columnName1 != "Region" else 100 * len(grouped_df),
         )
 
     return graph
