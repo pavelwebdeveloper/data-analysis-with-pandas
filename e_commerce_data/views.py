@@ -70,39 +70,53 @@ def e_commerce_data(request):
         if paymentMode:
             columnFilter.append(paymentMode)
 
-
+    # checking if columnSort or ascending have values and if columnFilter equals more than 0
     if (columnSort or ascending or (len(columnFilter) > 0)):
 
+        # deciding if ascending variable should equal to True of False
         ascending = True if ascending == "True" else False
 
         if(columnSort):
+            # if columnSort variable has a value then sort the data in the dataframe
             df = df.sort_values(by=columnSort, ascending=ascending)
 
         if(columnFilter):
+            # if columnSort variable has values then show only columns that are in the columnSort variable
             df = df[columnFilter]
 
     if (filterByColumn and minValueInput):
+        # if filterByColumn and minValueInput variables have values then 
+        # filter the data in the dataframe according to their values
         df = df[df[filterByColumn] > int(minValueInput)]
 
-
+    # preparing the dataframe to be displayed in a table format
     table = df.to_html(classes='table table-striped', index=False)
 
+    # display the ecommerce_data.html page with the table
     return render(request, 'ecommerce_data.html', {
         'table': table
     })
 
 def e_commerce_data_aggregating_statistics(request):
 
+    # obtaining input data sent through the form with GET method
     aggregatingStatistics = request.GET.get("aggregatingStatistics", "")
 
+    # putting the basic statistics of the numerical data of the dataframe
+    # into df_aggregation_statistics variable
     df_aggregation_statistics = df.describe()
 
+    # showing some aggregating statistics according to the value
+    # stored in the aggregatingStatistics variable
+    # if aggregatingStatistics variable is empty then just to show the basic statistics about the data
     if (aggregatingStatistics == ""):
         return render(request, 'ecommerce_data_aggregating_statistics.html', {
             'df_aggregation_statistics': df_aggregation_statistics
         })
     elif (aggregatingStatistics == "averageProfitByCategories"):
+        # preparing the data about the average profit for different categories 
         averageProfitByCategories = df[["Category", "Profit"]].groupby("Category").mean().reset_index()
+        # preparing the dataframe to be displayed in a table format
         averageProfitByCategories_table = averageProfitByCategories.to_html(classes='table table-striped', index=False)
 
         return render(request, 'ecommerce_data_aggregating_statistics.html', {
@@ -110,7 +124,9 @@ def e_commerce_data_aggregating_statistics(request):
             'aggregating_statistics_table': averageProfitByCategories_table
         })
     elif (aggregatingStatistics == "averageSalesByCategories"):
+        # preparing the data about the average sales for different categories
         averageSalesByCategories = df[["Category", "Sales"]].groupby("Category").mean().reset_index()
+        # preparing the dataframe to be displayed in a table format
         averageSalesByCategories_table = averageSalesByCategories.to_html(classes='table table-striped', index=False)
 
         return render(request, 'ecommerce_data_aggregating_statistics.html', {
@@ -118,7 +134,9 @@ def e_commerce_data_aggregating_statistics(request):
             'aggregating_statistics_table': averageSalesByCategories_table
         })
     elif (aggregatingStatistics == "averageProfitBySub-Categories"):
+        # preparing the data about the average profit for different sub-categories
         averageProfitBySubCategories = df[["Sub-Category", "Profit"]].groupby("Sub-Category").mean().reset_index()
+        # preparing the dataframe to be displayed in a table format
         averageProfitBySubCategories_table = averageProfitBySubCategories.to_html(classes='table table-striped', index=False)
 
         return render(request, 'ecommerce_data_aggregating_statistics.html', {
@@ -126,7 +144,9 @@ def e_commerce_data_aggregating_statistics(request):
             'aggregating_statistics_table': averageProfitBySubCategories_table
         })
     elif (aggregatingStatistics == "averageSalesBySub-Categories"):
+        # preparing the data about the average sales for different sub-categories
         averageSalesBySubCategories = df[["Sub-Category", "Sales"]].groupby("Sub-Category").mean().reset_index()
+        # preparing the dataframe to be displayed in a table format
         averageSalesBySubCategories_table = averageSalesBySubCategories.to_html(classes='table table-striped', index=False)
 
         return render(request, 'ecommerce_data_aggregating_statistics.html', {
@@ -134,10 +154,15 @@ def e_commerce_data_aggregating_statistics(request):
             'aggregating_statistics_table': averageSalesBySubCategories_table
         })
     elif (aggregatingStatistics == "paymentModeCounts"):
+        # preparing the data about the number of transactions made for each payment mode
         paymentModeCounts = df["Payment Mode"].value_counts().reset_index()
+        # naming the columns of the dataframe
         paymentModeCounts.columns = ["Payment Mode", "Count"]
+        # preparing the dataframe to be displayed in a table format
         paymentModeCounts_table = paymentModeCounts.to_html(classes='table table-striped', index=False)
 
+        # display the ecommerce_data_aggregating_statistics.html page with 
+        # the basic statistics about the data and the table
         return render(request, 'ecommerce_data_aggregating_statistics.html', {
             'df_aggregation_statistics': df_aggregation_statistics,
             'aggregating_statistics_table': paymentModeCounts_table
@@ -147,19 +172,25 @@ def e_commerce_data_aggregating_statistics(request):
 
 def e_commerce_data_info(request):
 
+
     buffer = io.StringIO()
+    # preparing to display the technical summary about the dataframe
     df.info(buf=buffer)
     info_output = buffer.getvalue()
 
-    #table = df.to_html(classes='table table-striped', index=False)
+    # display the ecommerce_data_info.html page with the technical summary about the dataframe
     return render(request, 'ecommerce_data_info.html', {
         'data_info': info_output
     })
 
 
 def plots(request):
+    # obtaining input data sent through the form with GET method
     kindOfPlot = request.GET.get("kindOfPlot", "")
 
+    # finding out which plot should be displayed and 
+    # then calling the barPlotBuilder with the appropriate data
+    # or showing the plots.html page without a plot
     if (kindOfPlot == ""):
         return render(request, 'plots.html')
     elif (kindOfPlot == "salesByProduct"):
@@ -185,6 +216,7 @@ def plots(request):
             'plot': graph_html
         })
 
+# thos function builds a plot based on the parameters of the function
 def barPlotBuilder(columnName1, columnName2, plotOrientation, plotName):
     grouped_df = df.groupby(columnName1)[columnName2].sum().reset_index()
     grouped_df = grouped_df.sort_values(by=columnName2, ascending=False)
@@ -207,7 +239,6 @@ def barPlotBuilder(columnName1, columnName2, plotOrientation, plotName):
     graph.update_layout(
             margin=dict(l=200, r=40, t=80, b=40),
             autosize=True,
-            #height=20 * len(grouped_df)
             height = 20 * len(grouped_df) if columnName1 != "Region" else 100 * len(grouped_df),
         )
 
