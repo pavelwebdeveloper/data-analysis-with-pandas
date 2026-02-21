@@ -3,6 +3,7 @@
 {% block title %}Plots{% endblock title %}
 
 {% block page_content %}
+<!-- a form with a dropdown list to select which plot to display -->
 <form id="plot-form" method="get" action="{% url 'plots' %}">
     <h4>Select a plot</h4>
                     <select name="kindOfPlot" onchange="this.form.submit();">

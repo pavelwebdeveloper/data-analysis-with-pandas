@@ -7,9 +7,8 @@
 
 <br>
 <br>
-
-<form id="aggregating-statistics-form" method="get" action="{% url 'e_commerce_data_aggregating_statistics' %}">
-    
+<!-- a form with a dropdown list to select which aggregating statistics to display -->
+<form id="aggregating-statistics-form" method="get" action="{% url 'e_commerce_data_aggregating_statistics' %}">  
                     <select name="aggregatingStatistics" onchange="this.form.submit();">
                         <option value="">-- Select aggregating statistics --</option>
                         <option value="averageProfitByCategories">Average profit for different categories</option>

@@ -2,6 +2,7 @@ from django.urls import path
 
 from . import views
 
+# paths for urls to access the pages of the webapp
 urlpatterns = [
     path('', views.e_commerce_data, name='e_commerce_data'),
     path('e_commerce_data_aggregating_statistics/', views.e_commerce_data_aggregating_statistics, name='e_commerce_data_aggregating_statistics'),

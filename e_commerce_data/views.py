@@ -216,11 +216,14 @@ def plots(request):
             'plot': graph_html
         })
 
-# thos function builds a plot based on the parameters of the function
+# this function builds a plot based on the parameters of the function
 def barPlotBuilder(columnName1, columnName2, plotOrientation, plotName):
+    # Calculating the totals for groups of products groupped by the same product names
     grouped_df = df.groupby(columnName1)[columnName2].sum().reset_index()
+    # Sorting the data in the dataframe
     grouped_df = grouped_df.sort_values(by=columnName2, ascending=False)
 
+    # building the bar graph from the groupped dataframe
     graph = px.bar(
             grouped_df,
             y = columnName1 if plotOrientation == "h" else columnName2,
